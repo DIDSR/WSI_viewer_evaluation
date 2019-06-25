@@ -32,7 +32,13 @@ function [movingOutput,fixedOutput] = ImageRegistration(movingImageFile,fixedIma
 
     temp = [1,1,1]*transformationMatrix;
     imageTopLeft = temp(1:2);
-
+    [m_move,n_move,color] = size(movingImage);
+    temp1 = [n_move,m_move,1]*transformationMatrix;
+    imageBottomRight = temp1;
+    %imageBottomRight = [m_move-1+temp(2),n_move-1+temp(1)];
+    
+    [m_fix,n_fix,color] = size(fixedImage);
+    
     fixed = rgb2gray(fixedImage);
     moving = rgb2gray(movingImage);
     fixedRefObj = imref2d(size(fixed));
@@ -41,10 +47,13 @@ function [movingOutput,fixedOutput] = ImageRegistration(movingImageFile,fixedIma
     movedImage(:,:,2) = imwarp(movingImage(:,:,2), movingRefObj, transformation, 'OutputView', fixedRefObj, 'SmoothEdges', true);
     movedImage(:,:,3) = imwarp(movingImage(:,:,3), movingRefObj, transformation, 'OutputView', fixedRefObj, 'SmoothEdges', true);
 
-    usedCol = max(round(imageTopLeft(1)),1);
-    usedRow = max(round(imageTopLeft(2)),1);
+    usedCol1 = max(round(imageTopLeft(1)),1);
+    usedRow1 = max(round(imageTopLeft(2)),1);
+    
+    usedCol2 = min(round(imageBottomRight(1)),n_fix);
+    usedRow2 = min(round(imageBottomRight(2)),m_fix);
 
-    fixedOutput = fixedImage(usedRow:end,usedCol:end,:);
-    movingOutput = movedImage(usedRow:end,usedCol:end,:);
+    fixedOutput = fixedImage(usedRow1:usedRow2,usedCol1:usedCol2,:);
+    movingOutput = movedImage(usedRow1:usedRow2,usedCol1:usedCol2,:);
 end
 
