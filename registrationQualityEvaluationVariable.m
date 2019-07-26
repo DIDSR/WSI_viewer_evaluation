@@ -1,4 +1,4 @@
-function registrationAccuracy = registrationQualityEvaluation(image1,image2)
+function registrationAccuracy = registrationQualityEvaluationVariable(image1,image2)
 %REGISTRATIONQUALITYEVALUATION Summary of this function goes here
 %   Detailed explanation goes here
     CIELAB1 = rgb2lab(image1);
